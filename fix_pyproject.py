@@ -1,0 +1,1 @@
+content = chr(10).join([chr(32)+chr(32) if x==chr(32) else x for x in [chr(91)+chr(98)+chr(117)+chr(105)+chr(108)+chr(100)+chr(45)+chr(115)+chr(121)+chr(115)+chr(116)+chr(101)+chr(109)+chr(93)]])
