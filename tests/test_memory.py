@@ -6,18 +6,29 @@ import time
 from research_agent.core.memory import PersistentMemory
 
 
+def _handle_remove_readonly(func, path, exc_info):
+    """Error handler for shutil.rmtree that ignores permission errors."""
+    import stat
+
+    os.chmod(path, stat.S_IWRITE)
+    try:
+        func(path)
+    except Exception:
+        pass
+
+
 def _rmtree_retry(path, retries=5, delay=0.5):
     """Remove directory tree with retry logic for Windows file locking issues."""
     for i in range(retries):
         try:
-            shutil.rmtree(path, onexc=lambda *args: None)
+            shutil.rmtree(path, onerror=_handle_remove_readonly)
             return
-        except PermissionError:
+        except Exception:
             gc.collect()
             time.sleep(delay)
     # Final attempt - ignore all errors
     try:
-        shutil.rmtree(path, onexc=lambda *args: None)
+        shutil.rmtree(path, onerror=_handle_remove_readonly)
     except Exception:
         pass
 
