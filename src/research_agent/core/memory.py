@@ -26,6 +26,14 @@ class PersistentMemory:
         )
         return doc_id
         
+    def close(self):
+        """
+        Closes the ChromaDB client to release file handles.
+        Important for cleanup on Windows.
+        """
+        self.collection = None
+        self.client = None
+        
     def search(self, query: str, n_results: int = 5) -> List[Dict[str, Any]]:
         """
         Semantic search for longitudinal research correlation.
