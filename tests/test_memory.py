@@ -25,7 +25,9 @@ def _rmtree_retry(path, retries=5, delay=0.5):
 @pytest.fixture
 def memory():
     test_dir = "./.test_chroma_db"
-    mem = PersistentMemory(collection_name="test_collection", persist_directory=test_dir)
+    mem = PersistentMemory(
+        collection_name="test_collection", persist_directory=test_dir
+    )
     yield mem
     # Close the client to release file handles
     mem.close()
@@ -38,13 +40,12 @@ def memory():
 
 def test_memory_store_and_search(memory):
     doc_id = memory.store(
-        document="Large Language Models are scaling rapidly.",
-        metadata={"topic": "LLM"}
+        document="Large Language Models are scaling rapidly.", metadata={"topic": "LLM"}
     )
-    
+
     assert doc_id is not None
-    
+
     results = memory.search("scaling language models")
-    
+
     assert len(results) > 0
     assert "Large Language" in results[0]["document"]
